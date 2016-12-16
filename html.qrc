@@ -1,0 +1,36 @@
+<RCC>
+    <qresource prefix="/">
+        <file>html/build/dist/chart/bar.js</file>
+        <file>html/build/dist/chart/chord.js</file>
+        <file>html/build/dist/chart/eventRiver.js</file>
+        <file>html/build/dist/chart/force.js</file>
+        <file>html/build/dist/chart/funnel.js</file>
+        <file>html/build/dist/chart/gauge.js</file>
+        <file>html/build/dist/chart/k.js</file>
+        <file>html/build/dist/chart/line.js</file>
+        <file>html/build/dist/chart/map.js</file>
+        <file>html/build/dist/chart/pie.js</file>
+        <file>html/build/dist/chart/radar.js</file>
+        <file>html/build/dist/chart/scatter.js</file>
+        <file>html/build/dist/chart/tree.js</file>
+        <file>html/build/dist/chart/treemap.js</file>
+        <file>html/build/dist/chart/venn.js</file>
+        <file>html/build/dist/chart/wordCloud.js</file>
+        <file>html/build/dist/echarts-all.js</file>
+        <file>html/build/dist/echarts.js</file>
+        <file>html/bar.html</file>
+        <file>html/barx.html</file>
+        <file>html/bary.html</file>
+        <file>html/chord.html</file>
+        <file>html/data.html</file>
+        <file>html/funnel.html</file>
+        <file>html/gauge.html</file>
+        <file>html/k.html</file>
+        <file>html/line.html</file>
+        <file>html/linex.html</file>
+        <file>html/liney.html</file>
+        <file>html/pie.html</file>
+        <file>html/radar.html</file>
+        <file>html/scatter.html</file>
+    </qresource>
+</RCC>
