@@ -1,3 +1,4 @@
+#pragma once
 #include <AffdexException.h>
 #include <CameraDetector.h>
 #include <Detector.h>
@@ -9,3 +10,6 @@
 #include <ProcessStatusListener.h>
 #include <typedefs.h>
 #include <VideoDetector.h>
+
+using namespace affdex;
+
