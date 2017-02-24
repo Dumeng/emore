@@ -33,6 +33,7 @@ class Ui_MainWindow
 public:
     QAction *actionNew;
     QAction *actionOpen;
+    QAction *actionQuit;
     QWidget *centralWidget;
     QPushButton *pushButton;
     QGraphicsView *MediaView;
@@ -71,6 +72,8 @@ public:
         actionNew->setObjectName(QStringLiteral("actionNew"));
         actionOpen = new QAction(MainWindow);
         actionOpen->setObjectName(QStringLiteral("actionOpen"));
+        actionQuit = new QAction(MainWindow);
+        actionQuit->setObjectName(QStringLiteral("actionQuit"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         centralWidget->setAutoFillBackground(false);
@@ -110,6 +113,7 @@ public:
         __qtreewidgetitem->setText(0, QStringLiteral("1"));
         QuestionsTree->setHeaderItem(__qtreewidgetitem);
         QuestionsTree->setObjectName(QStringLiteral("QuestionsTree"));
+        QuestionsTree->setEnabled(false);
         QuestionsTree->setGeometry(QRect(340, 340, 261, 351));
         DetailsTable = new QTableWidget(centralWidget);
         DetailsTable->setObjectName(QStringLiteral("DetailsTable"));
@@ -123,7 +127,7 @@ public:
         ChartViewLine->setGeometry(QRect(610, 500, 661, 191));
         pushButton_2 = new QPushButton(centralWidget);
         pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
-        pushButton_2->setGeometry(QRect(480, 190, 93, 41));
+        pushButton_2->setGeometry(QRect(370, 120, 93, 41));
         pushButton_2->setFont(font1);
         pushButton_2->setStyleSheet(QStringLiteral("background-color:rgb(195,224,255)"));
         pushButton_2->setFlat(false);
@@ -181,7 +185,7 @@ public:
         pushButton_5 = new QPushButton(centralWidget);
         pushButton_5->setObjectName(QStringLiteral("pushButton_5"));
         pushButton_5->setEnabled(false);
-        pushButton_5->setGeometry(QRect(370, 120, 93, 41));
+        pushButton_5->setGeometry(QRect(480, 190, 93, 41));
         QPalette palette4;
         palette4.setBrush(QPalette::Active, QPalette::Button, brush1);
         palette4.setBrush(QPalette::Active, QPalette::Base, brush1);
@@ -272,6 +276,8 @@ public:
         menuBar->addAction(menu->menuAction());
         menu->addAction(actionNew);
         menu->addAction(actionOpen);
+        menu->addSeparator();
+        menu->addAction(actionQuit);
 
         retranslateUi(MainWindow);
 
@@ -291,12 +297,13 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "eMore", Q_NULLPTR));
         actionNew->setText(QApplication::translate("MainWindow", "\346\226\260\345\273\272\345\210\206\346\236\220", Q_NULLPTR));
         actionOpen->setText(QApplication::translate("MainWindow", "\346\211\223\345\274\200\345\210\206\346\236\220", Q_NULLPTR));
+        actionQuit->setText(QApplication::translate("MainWindow", "\351\200\200\345\207\272", Q_NULLPTR));
         pushButton->setText(QApplication::translate("MainWindow", "\346\222\255 \346\224\276", Q_NULLPTR));
         pushButton_2->setText(QApplication::translate("MainWindow", "\345\201\234 \346\255\242", Q_NULLPTR));
         pushButton_3->setText(QApplication::translate("MainWindow", "\346\211\223 \345\274\200", Q_NULLPTR));
         pushButton_4->setText(QApplication::translate("MainWindow", "\345\210\206 \346\236\220", Q_NULLPTR));
         pushButton_5->setText(QApplication::translate("MainWindow", "Disabled", Q_NULLPTR));
-        pushButton_6->setText(QApplication::translate("MainWindow", "\345\270\256 \345\212\251", Q_NULLPTR));
+        pushButton_6->setText(QApplication::translate("MainWindow", "\345\205\263 \344\272\216", Q_NULLPTR));
         pushButton_7->setText(QApplication::translate("MainWindow", "Disabled", Q_NULLPTR));
         menu->setTitle(QApplication::translate("MainWindow", "\346\226\207\344\273\266", Q_NULLPTR));
     } // retranslateUi

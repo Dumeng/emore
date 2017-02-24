@@ -8,14 +8,14 @@ class affdexThread;
 class imgListener : public ImageListener
 {
 public:
-	int Fcount,Rcount;
+	int Fcount, Rcount;
 
-    imgListener(affdexThread *p);
-    ~imgListener();
-    void onImageCapture(Frame image);
-    void onImageResults(std::map< FaceId, Face > faces, Frame image);
+	imgListener(affdexThread *p);
+	~imgListener();
+	void onImageCapture(Frame image);
+	void onImageResults(std::map< FaceId, Face > faces, Frame image);
 	void setParent(affdexThread *parent);
-    void reset();
+	void reset();
 private:
 	affdexThread *parentThread;
 };
@@ -23,7 +23,7 @@ private:
 class videoListener : public ProcessStatusListener
 {
 public:
-    videoListener(affdexThread *p);
+	videoListener(affdexThread *p);
 	~videoListener();
 	void onProcessingException(AffdexException ex);
 	void onProcessingFinished();

@@ -4,7 +4,7 @@
 
 imgListener::imgListener(affdexThread *p)
 {
-    parentThread =p;
+	parentThread = p;
 	Rcount = 0;
 	Fcount = 0;
 }
@@ -27,17 +27,17 @@ void imgListener::onImageCapture(Frame image)
 
 void imgListener::onImageResults(std::map<FaceId, Face> faces, Frame image)
 {
-    {
-        QMutexLocker locker(&(parentThread->qFacesLock));
-        parentThread->qFaces->enqueue(faces.begin()->second);
-    }
+	{
+		QMutexLocker locker(&(parentThread->qFacesLock));
+        parentThread->qFaces->append(faces.begin()->second);
+	}
 	Rcount++;
-    emit parentThread->newDataSignal(faces.begin()->second,Rcount);
+	emit parentThread->newDataSignal(faces.begin()->second, Rcount);
 }
 
 videoListener::videoListener(affdexThread *p)
 {
-    parentThread=p;
+	parentThread = p;
 }
 
 videoListener::~videoListener()
@@ -52,16 +52,16 @@ void videoListener::setParent(affdexThread *parent)
 
 void videoListener::onProcessingException(AffdexException e)
 {
-    parentThread->processException(e);
+	parentThread->processException(e);
 }
 
 void videoListener::onProcessingFinished()
 {
-    parentThread->processFinished();
+	parentThread->processFinished();
 }
 
 void imgListener::reset()
 {
-    Rcount=0;
-    Fcount=0;
+	Rcount = 0;
+	Fcount = 0;
 }

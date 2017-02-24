@@ -209,6 +209,9 @@
     </property>
    </widget>
    <widget class="QTreeWidget" name="QuestionsTree">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>340</x>
@@ -259,8 +262,8 @@
    <widget class="QPushButton" name="pushButton_2">
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>190</y>
+      <x>370</x>
+      <y>120</y>
       <width>93</width>
       <height>41</height>
      </rect>
@@ -589,8 +592,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>370</x>
-      <y>120</y>
+      <x>480</x>
+      <y>190</y>
       <width>93</width>
       <height>41</height>
      </rect>
@@ -834,7 +837,7 @@
      <string notr="true">background-color:rgb(195,224,255)</string>
     </property>
     <property name="text">
-     <string>帮 助</string>
+     <string>关 于</string>
     </property>
     <property name="autoDefault">
      <bool>false</bool>
@@ -1009,6 +1012,8 @@
     </property>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
    </widget>
    <addaction name="menu"/>
   </widget>
@@ -1020,6 +1025,11 @@
   <action name="actionOpen">
    <property name="text">
     <string>打开分析</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>退出</string>
    </property>
   </action>
  </widget>
