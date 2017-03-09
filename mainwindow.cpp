@@ -26,10 +26,10 @@ ui(new Ui::MainWindow)
 		Taffdex, SLOT(stopProcessSlot()));
 	connect(this, SIGNAL(ProcessVideoSignal(QString)),
 		Taffdex, SLOT(ProcessVideoSlot(QString)));
-	connect(this, SIGNAL(testWSignal()),
-		Taffdex, SLOT(testTSlot()));
-	connect(Taffdex, SIGNAL(testTSignal()),
-		this, SLOT(testWSlot()));
+	//connect(this, SIGNAL(testWSignal()),
+	//	Taffdex, SLOT(testTSlot()));
+	//connect(Taffdex, SIGNAL(testTSignal()),
+	//	this, SLOT(testWSlot()));
 	connect(Taffdex, SIGNAL(finishedSignal(std::exception, float)),
 		this, SLOT(finishedSlot(std::exception, float)));
 
@@ -68,6 +68,12 @@ ui(new Ui::MainWindow)
 	chartLine->addSeries(seriesLineSadness);
 	chartLine->addSeries(seriesLineAnger);
 	chartLine->addSeries(seriesLineSurprise);
+	seriesLineAnger->setColor(QColor::fromHsv(240, 240, 216));
+	seriesLineDisgust->setColor(QColor::fromHsv(120, 240, 216));
+	seriesLineFear->setColor(QColor::fromHsv(60, 240, 216));
+	seriesLineJoy->setColor(QColor::fromHsv(0, 240, 216));
+	seriesLineSadness->setColor(QColor::fromHsv(180, 240, 216));
+	seriesLineSurprise->setColor(QColor::fromHsv(300, 240, 216));
 
 	QValueAxis *axisY = new QValueAxis();
 	QValueAxis *axisX = new QValueAxis();
@@ -103,20 +109,10 @@ ui(new Ui::MainWindow)
 	{
 		seriesRadar->append(i, radialMin + rd);
 	}
-	/*
-	seriesRadar->append(0, radialMin + rd);
-	seriesRadar->append(1, radialMax);
-	seriesRadar->append(2, radialMin + rd);
-	seriesRadar->append(3, radialMax);
-	seriesRadar->append(4, radialMin + rd);
-	seriesRadar->append(5, radialMax);
-	seriesRadar->append(6, radialMin + rd);
-	*/
 
 	seriesArea = new QAreaSeries();
 	seriesArea->setUpperSeries(seriesRadar);
 	seriesArea->setOpacity(0.5);
-
 
 	chartRadar = new QPolarChart();
 	chartRadar->addSeries(seriesRadar);
@@ -152,14 +148,40 @@ ui(new Ui::MainWindow)
 	radialAxis->setRange(radialMin, radialMax);
 	angularAxis->setRange(angularMin, angularMax);
 
+	chartBar = new QChart();
+	seriesBar = new QBarSeries();
+	QBarSet *set = new QBarSet(QString::fromLocal8Bit("ÊýÖµ"));
+	for (int i = 0; i < 6; i++)
+		set->insert(i, 30);
+	seriesBar->append(set);
+	chartBar->addSeries(seriesBar);
+	chartBar->createDefaultAxes();
+	((QBarCategoryAxis*)chartBar->axisX())->clear();
+	((QBarCategoryAxis*)chartBar->axisX())->append(QString::fromLocal8Bit("ÓäÔÃ"));
+	((QBarCategoryAxis*)chartBar->axisX())->append(QString::fromLocal8Bit("¿Ö¾å"));
+	((QBarCategoryAxis*)chartBar->axisX())->append(QString::fromLocal8Bit("Ñá¶ñ"));
+	((QBarCategoryAxis*)chartBar->axisX())->append(QString::fromLocal8Bit("±¯ÉË"));
+	((QBarCategoryAxis*)chartBar->axisX())->append(QString::fromLocal8Bit("·ßÅ­"));
+	((QBarCategoryAxis*)chartBar->axisX())->append(QString::fromLocal8Bit("¾ªÑÈ"));
+	((QValueAxis*)chartBar->axisY())->setRange(0, 100);
+	chartBar->legend()->hide();
+	((QValueAxis*)chartBar->axisY())->setLabelFormat("%d%%");
+	((QBarCategoryAxis*)chartBar->axisX())->setLabelsAngle(-60);
+	QFont font = ((QBarCategoryAxis*)chartBar->axisX())->labelsFont();
+	font.setPointSize(6);
+	((QBarCategoryAxis*)chartBar->axisX())->setLabelsFont(font);
+
+	//qDebug()<<chartBar->childItems().at(19)->childItems().at(i*2+1);
+
+
 	ui->ChartViewRadar->setChart(chartRadar);
 	ui->ChartViewLine->setChart(chartLine);
-    QPen mouseLine(QColor(200,0,0));
-    mouseLine.setWidth(3);
-    trackLine = ui->ChartViewLine->scene()->addLine(-4,35,-4,150,mouseLine);
-    ui->ChartViewLine->scene()->installEventFilter(this);
-    lineTracking=true;
-    ui->ChartViewLine->setDisabled(true);
+	QPen mouseLine(QColor(200, 0, 0));
+	mouseLine.setWidth(3);
+	trackLine = ui->ChartViewLine->scene()->addLine(-4, 35, -4, 150, mouseLine);
+	ui->ChartViewLine->scene()->installEventFilter(this);
+	lineTracking = true;
+	ui->ChartViewLine->setDisabled(true);
 
 	//Media View
 	player = new QMediaPlayer(ui->MediaView, QMediaPlayer::VideoSurface);
@@ -171,7 +193,24 @@ ui(new Ui::MainWindow)
 	mediaScene->addItem(videoItem);
 	ui->MediaView->setScene(mediaScene);
 	ui->MediaView->show();
-	ui->horizontalSlider->hide();
+	ui->PlayProgressBar->hide();
+	ui->MediaView->installEventFilter(this);
+	ui->MediaView->scene()->installEventFilter(this);
+	ui->MediaView->setMouseTracking(true);
+	playerSliderTimer = new QTimer(this);
+	playerUpdateTimer = new QTimer(this);
+	playerUpdateTimer->setInterval(40);
+
+	connect(player, SIGNAL(durationChanged(qint64)),
+		this, SLOT(setMediaDuration(qint64)));
+	connect(playerSliderTimer, SIGNAL(timeout()),
+		this, SLOT(on_timer_timeout()));
+	//connect(player,SIGNAL(positionChanged(qint64)),ui->PlayProgressBar,SLOT(setValue(int)));
+	connect(player, SIGNAL(positionChanged(qint64)),
+		this, SLOT(testWSlot(qint64)));
+	connect(playerUpdateTimer, SIGNAL(timeout()),
+		this, SLOT(updateProgressBar()));
+	//connect(ui->PlayProgressBar,SIGNAL(valueChanged(int)),player,SLOT(setPosition(qint64));
 
 	//Detail View
 	ui->DetailsTable->setColumnCount(3);
@@ -185,7 +224,10 @@ ui(new Ui::MainWindow)
 		ui->DetailsTable->setItem(i, 2, new QTableWidgetItem(QString("0")));
 		ui->DetailsTable->setItem(i, 1, new QTableWidgetItem(QString::fromLocal8Bit(items[i])));
 		if (i < 6)
+		{
 			ui->DetailsTable->item(i, 0)->setCheckState(Qt::Checked);
+			ui->DetailsTable->item(i, 1)->setTextColor(QColor::fromHsv(i * 60, 240, 216));
+		}
 		ui->DetailsTable->setRowHeight(i, 25);
 	}
 	ui->DetailsTable->setRowHeight(9, 25);
@@ -220,8 +262,10 @@ ui(new Ui::MainWindow)
 	//Progress Dialog
 	pDlg = new QProgressDialog(this);
 	pPB = new QProgressBar(pDlg);
-	connect(pDlg, SIGNAL(canceled()), Taffdex, SLOT(stopProcessSlot()));
-	connect(Taffdex, SIGNAL(finishedSignal(std::exception, float)), pDlg, SLOT(cancel()));
+	connect(pDlg, SIGNAL(canceled()),
+		Taffdex, SLOT(stopProcessSlot()));
+	connect(Taffdex, SIGNAL(finishedSignal(std::exception, float)),
+		pDlg, SLOT(cancel()));
 	pDlg->setModal(true);
 	pDlg->setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
 	pDlg->setCancelButtonText(QString::fromLocal8Bit("È¡Ïû"));
@@ -240,9 +284,9 @@ ui(new Ui::MainWindow)
 	ui->ChartViewLine->setStyleSheet("border:4px groove grey;border-color: rgb(105, 158, 255);border-radius:10px");
 	ui->MediaView->setStyleSheet("border:4px groove grey;border-color: rgb(105, 158, 255);border-radius:10px");
 
-    //Menu
-    ui->actionNew->setDisabled(true);
-    ui->actionOpen->setDisabled(true);
+	//Menu
+	ui->actionNew->setDisabled(true);
+	ui->actionOpen->setDisabled(true);
 
 	av_register_all();
 }
@@ -257,11 +301,13 @@ void MainWindow::on_pushButton_clicked()
 	if (player->state() != QMediaPlayer::PlayingState)
 	{
 		player->play();
+		playerUpdateTimer->start();
 		ui->pushButton->setText(QString::fromLocal8Bit("ÔÝ Í£"));
 	}
 	else
 	{
 		player->pause();
+		playerUpdateTimer->stop();
 		ui->pushButton->setText(QString::fromLocal8Bit("²¥ ·Å"));
 	}
 	return;
@@ -291,6 +337,7 @@ void MainWindow::FrameDataUpdateSlot(Face face, long count)
 void MainWindow::on_pushButton_2_clicked()
 {
 	player->stop();
+	playerUpdateTimer->stop();
 	ui->pushButton->setText(QString::fromLocal8Bit("²¥ ·Å"));
 	return;
 }
@@ -317,7 +364,7 @@ void MainWindow::on_pushButton_3_clicked()
 				{
 					videoFrames = pFormatCtx->streams[0]->nb_frames;
 					currentFile = path;
-					player->setMedia(QUrl(currentFile));
+					player->setMedia(QUrl::fromLocalFile(currentFile));
 					QMessageBox::information(NULL, tr("Path"), tr("The file selected is:\n") + currentFile);
 					return;
 				}
@@ -342,7 +389,7 @@ void MainWindow::on_pushButton_4_clicked()
 		pDlg->setRange(0, videoFrames);
 		pDlg->show();
 		removeLinesData();
-        ui->ChartViewLine->setDisabled(false);
+		ui->ChartViewLine->setDisabled(false);
 		emit ProcessVideoSignal(currentFile);
 		return;
 	}
@@ -350,14 +397,19 @@ void MainWindow::on_pushButton_4_clicked()
 		QMessageBox::critical(NULL, tr("Warning"), tr("File don't exist!"));
 }
 
-void MainWindow::on_pushButton_6_clicked()
+void MainWindow::on_pushButton_5_clicked()
 {
-    QMessageBox::about(this,QString::fromLocal8Bit("¹ØÓÚ"),QString::fromLocal8Bit("eMore\nVer.Alpha3\nEmail:3140103993@zju.edu.cn"));
+	QMessageBox::information(NULL, tr("Media Duration"), QString("%1\n%2").arg(player->position()).arg(player->duration()));
 }
 
-void MainWindow::testWSlot()
+void MainWindow::on_pushButton_6_clicked()
 {
-	QMessageBox::information(NULL, tr("TEST"), tr("Signal From Another Thread!"));
+    QMessageBox::about(this, QString::fromLocal8Bit("¹ØÓÚ"), QString::fromLocal8Bit("eMore\tPowered by Affdex(R)\nVer.Alpha5\nEmail:3140103993@zju.edu.cn"));
+}
+
+void MainWindow::testWSlot(qint64 a)
+{
+	a = 0;
 	return;
 }
 
@@ -365,7 +417,7 @@ void MainWindow::finishedSlot(std::exception e, float t)
 {
 	updateDetails(currentFace);
 	updateRadar(currentFace);
-    videoFrames=Taffdex->getImgCount();
+	videoFrames = Taffdex->getImgCount();
 	if (e.what() == std::string("success"))
 	{
 		QString QStr = QString("Processing successfully finished in %1 s").arg(t);
@@ -403,6 +455,15 @@ void MainWindow::updateRadar(const Face face)
 	seriesRadar->replace(3, 3, face.emotions.surprise);
 	seriesRadar->replace(4, 4, face.emotions.disgust);
 	seriesRadar->replace(5, 5, face.emotions.anger);
+	seriesBar->barSets().at(0)->remove(0, 6);
+	//seriesBar->clear();
+	seriesBar->barSets().at(0)->append(face.emotions.joy);
+	seriesBar->barSets().at(0)->append(face.emotions.fear);
+	seriesBar->barSets().at(0)->append(face.emotions.disgust);
+	seriesBar->barSets().at(0)->append(face.emotions.sadness);
+	seriesBar->barSets().at(0)->append(face.emotions.anger);
+	seriesBar->barSets().at(0)->append(face.emotions.surprise);
+	repaintBar();
 	return;
 }
 
@@ -426,34 +487,115 @@ void MainWindow::on_DetailsTable_cellClicked(int row, int column)
 
 void MainWindow::on_actionQuit_triggered()
 {
-    exit(0);
+	exit(0);
 }
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
-    if (watched==ui->ChartViewLine->scene()&&event->type()==QEvent::GraphicsSceneMouseMove&&lineTracking)
-    {
-        qreal x=((QGraphicsSceneMouseEvent*)event)->scenePos().x();
-        x=x>614?614:x;
-        x=x<70?70:x;
-        trackLine->setLine(x,35,x,150);
-        int index=floor((x-70)/545*videoFrames);
-        updateRadar(Taffdex->qFaces->at(index));
-        updateDetails(Taffdex->qFaces->at(index));
-        return true;
-    }
-    else if(watched==ui->ChartViewLine->scene()&&event->type()==QEvent::GraphicsSceneMouseRelease)
-    {
-        lineTracking=!lineTracking;
-        qreal x=((QGraphicsSceneMouseEvent*)event)->scenePos().x();
-        x=x>614?614:x;
-        x=x<70?70:x;
-        trackLine->setLine(x,35,x,150);
-        int index=floor((x-70)/545*videoFrames);
-        updateRadar(Taffdex->qFaces->at(index));
-        updateDetails(Taffdex->qFaces->at(index));
-        return true;
-    }
-    else
-        return QMainWindow::eventFilter(watched,event);
+	if (watched == ui->ChartViewLine->scene())
+	{
+		if (event->type() == QEvent::GraphicsSceneMouseMove&&lineTracking)
+		{
+			qreal x = ((QGraphicsSceneMouseEvent*)event)->scenePos().x();
+			x = x > 614 ? 614 : x;
+			x = x < 70 ? 70 : x;
+			trackLine->setLine(x, 35, x, 150);
+			int index = floor((x - 70) / 545 * videoFrames);
+			updateRadar(Taffdex->qFaces->at(index));
+			updateDetails(Taffdex->qFaces->at(index));
+			return true;
+		}
+		else if (event->type() == QEvent::GraphicsSceneMouseRelease)
+		{
+			lineTracking = !lineTracking;
+			qreal x = ((QGraphicsSceneMouseEvent*)event)->scenePos().x();
+			x = x > 614 ? 614 : x;
+			x = x < 70 ? 70 : x;
+			trackLine->setLine(x, 35, x, 150);
+			int index = floor((x - 70) / 545 * videoFrames);
+			updateRadar(Taffdex->qFaces->at(index));
+			updateDetails(Taffdex->qFaces->at(index));
+			return true;
+		}
+		else
+			return QMainWindow::eventFilter(watched, event);
+	}
+	else if (watched == ui->MediaView->scene())
+	{
+		if (event->type() == QEvent::GraphicsSceneMouseRelease)
+		{
+			ui->PlayProgressBar->show();
+			//QMessageBox::information(this,QString::fromLocal8Bit("Mouse Moved"),QString::fromLocal8Bit("%1").arg(event->type()));
+			playerSliderTimer->setSingleShot(true);
+			playerSliderTimer->start(2000);
+			return true;
+		}
+		else if (event->type() == QEvent::GraphicsSceneHoverMove)
+		{
+			ui->PlayProgressBar->show();
+			QMessageBox::information(this, QString::fromLocal8Bit("Mouse Moved"), QString::fromLocal8Bit("%1").arg(event->type()));
+			playerSliderTimer->setSingleShot(true);
+			playerSliderTimer->start(2000);
+			return true;
+		}
+		else
+			return QMainWindow::eventFilter(watched, event);
+	}
+	else
+		return QMainWindow::eventFilter(watched, event);
+}
+
+void MainWindow::setMediaDuration(qint64 t)
+{
+	duration = t;
+	ui->PlayProgressBar->setMaximum(t);
+	return;
+}
+
+void MainWindow::on_PlayProgressBar_sliderMoved(int position)
+{
+	if (player->isVideoAvailable())
+		player->setPosition(position);
+	return;
+}
+
+void MainWindow::on_timer_timeout()
+{
+	ui->PlayProgressBar->hide();
+	return;
+}
+
+void MainWindow::updateProgressBar()
+{
+	if (player->isVideoAvailable())
+		ui->PlayProgressBar->setValue(player->position());
+	return;
+}
+
+void MainWindow::repaintBar()
+{
+	int i = 0;
+	int j = 0;
+	while (i < 6)
+	{
+		if (chartBar->childItems().at(19)->childItems().at(j)->type() == 3)
+		{
+			((QGraphicsRectItem*)chartBar->childItems().at(19)->childItems().at(i))->setBrush(QColor::fromHsv(i * 60, 240, 216));
+			((QGraphicsRectItem*)chartBar->childItems().at(19)->childItems().at(0))->setPen(QColor::fromHsv(i * 60, 240, 216));
+			i++;
+		}
+		j++;
+	}
+}
+
+void MainWindow::on_pushButton_8_clicked()
+{
+	if (ui->ChartViewRadar->chart() == chartRadar)
+	{
+		ui->ChartViewRadar->setChart(chartBar);
+		repaintBar();
+	}
+	else
+		ui->ChartViewRadar->setChart(chartRadar);
+	return;
 }

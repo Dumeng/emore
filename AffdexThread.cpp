@@ -3,7 +3,7 @@
 
 affdexThread::affdexThread()
 {
-	m_stopFlag = false;
+	m_stopFlag = true;
 }
 
 void affdexThread::stop()
@@ -28,7 +28,7 @@ void affdexThread::init()
 	cd = new CameraDetector();
 	vd->setImageListener(il);
 	vd->setProcessStatusListener(pl);
-    vd->setClassifierPath(dataDir);
+	vd->setClassifierPath(dataDir);
 	pd->setImageListener(il);
 	pd->setProcessStatusListener(pl);
 	cd->setImageListener(il);

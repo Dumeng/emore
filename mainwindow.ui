@@ -416,14 +416,14 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QSlider" name="horizontalSlider">
+   <widget class="QSlider" name="PlayProgressBar">
     <property name="enabled">
      <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
       <x>619</x>
-      <y>470</y>
+      <y>475</y>
       <width>641</width>
       <height>22</height>
      </rect>
@@ -982,6 +982,28 @@
      <bool>false</bool>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton_8">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>20</y>
+      <width>30</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Microsoft YaHei UI</family>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>⇆</string>
+    </property>
+   </widget>
    <zorder>comboBox</zorder>
    <zorder>ChartViewRadar</zorder>
    <zorder>pushButton</zorder>
@@ -991,11 +1013,12 @@
    <zorder>MediaView</zorder>
    <zorder>pushButton_2</zorder>
    <zorder>pushButton_3</zorder>
-   <zorder>horizontalSlider</zorder>
+   <zorder>PlayProgressBar</zorder>
    <zorder>pushButton_4</zorder>
    <zorder>pushButton_5</zorder>
    <zorder>pushButton_6</zorder>
    <zorder>pushButton_7</zorder>
+   <zorder>pushButton_8</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

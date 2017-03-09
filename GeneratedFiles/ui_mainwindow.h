@@ -43,12 +43,13 @@ public:
     QChartView *ChartViewLine;
     QPushButton *pushButton_2;
     QPushButton *pushButton_3;
-    QSlider *horizontalSlider;
+    QSlider *PlayProgressBar;
     QComboBox *comboBox;
     QPushButton *pushButton_4;
     QPushButton *pushButton_5;
     QPushButton *pushButton_6;
     QPushButton *pushButton_7;
+    QPushButton *pushButton_8;
     QMenuBar *menuBar;
     QMenu *menu;
 
@@ -151,11 +152,11 @@ public:
         pushButton_3->setStyleSheet(QStringLiteral("background-color:rgb(195,224,255)"));
         pushButton_3->setAutoDefault(false);
         pushButton_3->setFlat(false);
-        horizontalSlider = new QSlider(centralWidget);
-        horizontalSlider->setObjectName(QStringLiteral("horizontalSlider"));
-        horizontalSlider->setEnabled(true);
-        horizontalSlider->setGeometry(QRect(619, 470, 641, 22));
-        horizontalSlider->setOrientation(Qt::Horizontal);
+        PlayProgressBar = new QSlider(centralWidget);
+        PlayProgressBar->setObjectName(QStringLiteral("PlayProgressBar"));
+        PlayProgressBar->setEnabled(true);
+        PlayProgressBar->setGeometry(QRect(619, 475, 641, 22));
+        PlayProgressBar->setOrientation(Qt::Horizontal);
         comboBox = new QComboBox(centralWidget);
         comboBox->setObjectName(QStringLiteral("comboBox"));
         comboBox->setEnabled(false);
@@ -251,6 +252,14 @@ public:
         pushButton_7->setStyleSheet(QStringLiteral(""));
         pushButton_7->setAutoDefault(false);
         pushButton_7->setFlat(false);
+        pushButton_8 = new QPushButton(centralWidget);
+        pushButton_8->setObjectName(QStringLiteral("pushButton_8"));
+        pushButton_8->setEnabled(true);
+        pushButton_8->setGeometry(QRect(290, 20, 30, 30));
+        QFont font3;
+        font3.setFamily(QStringLiteral("Microsoft YaHei UI"));
+        font3.setPointSize(18);
+        pushButton_8->setFont(font3);
         MainWindow->setCentralWidget(centralWidget);
         comboBox->raise();
         ChartViewRadar->raise();
@@ -261,11 +270,12 @@ public:
         MediaView->raise();
         pushButton_2->raise();
         pushButton_3->raise();
-        horizontalSlider->raise();
+        PlayProgressBar->raise();
         pushButton_4->raise();
         pushButton_5->raise();
         pushButton_6->raise();
         pushButton_7->raise();
+        pushButton_8->raise();
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 1280, 25));
@@ -305,6 +315,7 @@ public:
         pushButton_5->setText(QApplication::translate("MainWindow", "Disabled", Q_NULLPTR));
         pushButton_6->setText(QApplication::translate("MainWindow", "\345\205\263 \344\272\216", Q_NULLPTR));
         pushButton_7->setText(QApplication::translate("MainWindow", "Disabled", Q_NULLPTR));
+        pushButton_8->setText(QApplication::translate("MainWindow", "\342\207\206", Q_NULLPTR));
         menu->setTitle(QApplication::translate("MainWindow", "\346\226\207\344\273\266", Q_NULLPTR));
     } // retranslateUi
 
